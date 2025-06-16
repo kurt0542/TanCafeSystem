@@ -14,23 +14,11 @@ import javax.swing.JOptionPane;
  */
 public class Dashboard extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Dashboard.class.getName());
-
     /**
      * Creates new form Dashboard
      */
     public Dashboard() {
         initComponents();
-    }
-    
-    public void init(){
-    setImage();
-    }
-    
-    public void setImage(){
-       ImageIcon icon = new ImageIcon(getClass().getResource("/image/Caffè Americano.jpg"));
-       Image img = icon.getImage().getScaledInstance(jLabelimage.getWidth(), jLabelimage.getHeight(), Image.SCALE_SMOOTH);
-       jLabelimage.setIcon(new ImageIcon(img));
     }
     
     public void qtyIsZero(int qty){
@@ -1117,7 +1105,7 @@ public class Dashboard extends javax.swing.JFrame {
                 }
             }
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
+            
         }
         //</editor-fold>
 
