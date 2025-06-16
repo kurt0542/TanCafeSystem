@@ -4,23 +4,63 @@
  */
 package cafe;
 
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /**
  *
  * @author jonathan
  */
 public class Dashboard extends javax.swing.JFrame {
-    
+    private double subtotal = 0.0;
+    private double tax = 0.0;
+    private double total = 0.0;
+    private final double TAX_RATE = 0.08; 
     /**
      * Creates new form Dashboard
      */
     public Dashboard() {
-        initComponents();
+    initComponents();
+    DatabaseHelper.initializeDB();
+    DatabaseHelper.createOrderTable();
+    loadMenuItemsFromDB();
+     loadImage("/cafe_americano.jpg",jLabelimage);
+     loadImage("/1cefeea1-ca84-416c-badb-9f424a485525.jpg",jLabelimage1);
+     loadImage("/626bfd1f-d12a-4baf-8083-5422a05e68f0.jpg",jLabelimage2);
+     loadImage("/889a2c3a-ae06-4789-9c50-c83800dd6dea.jpg",jLabelimage3);
+     loadImage("/b6612439-f5b5-4bca-a48e-871a3ad1d6bf.jpg",jLabelimage4);
+     loadImage("/ff312ed5-121c-4191-86f5-a263175949e4.jpg",jLabelimage5);
     }
     
+    private void loadImage(String resourcePath, JLabel label) {
+    if (resourcePath != null && !resourcePath.isEmpty()) {
+        try {
+            java.net.URL imgUrl = getClass().getResource(resourcePath);
+            if (imgUrl != null) {
+                ImageIcon icon = new ImageIcon(imgUrl);
+                Image img = icon.getImage().getScaledInstance(
+                    label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH);
+                label.setIcon(new ImageIcon(img));
+            } else {
+                System.out.println("Image not found at: " + resourcePath);
+            }
+        } catch (Exception e) {
+            System.out.println("Error loading image: " + e.getMessage());
+        }
+    }
+    }
+
     public void qtyIsZero(int qty){
       if(qty== 0) {
            JOptionPane.showMessageDialog(null,"Please increase the item quantity");
@@ -42,7 +82,62 @@ public class Dashboard extends javax.swing.JFrame {
               
        
     }
-
+    
+    private void loadMenuItemsFromDB() {
+    String sql = "SELECT * FROM menu_items";
+    
+    try (Connection conn = DatabaseHelper.connect();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+        
+        int i = 1;
+        while (rs.next() && i <= 8) {
+            String name = rs.getString("name");
+            double price = rs.getDouble("price");
+            String imagePath = rs.getString("image_path");
+            
+            // Update the labels based on the item number
+            switch(i) {
+                case 1:
+                    jLabel7.setText(name);
+                    jLabel8.setText("$" + price);
+                    // Load image if path exists
+                    break;
+                case 2:
+                    jLabel13.setText(name);
+                    jLabel14.setText("$" + price);
+                    break;
+                case 3:
+                    jLabel19.setText(name);
+                    jLabel20.setText("$" + price);
+                    break;
+                case 4:
+                    jLabel25.setText(name);
+                    jLabel26.setText("$" + price);
+                    break;
+                case 5:
+                    jLabel31.setText(name);
+                    jLabel32.setText("$" + price);
+                    break;
+                case 6:
+                    jLabel37.setText(name);
+                    jLabel38.setText("$" + price);
+                    break;
+                case 7:
+                    jLabel43.setText(name);
+                    jLabel44.setText("$" + price);
+                    break;
+                case 8:
+                    jLabel49.setText(name);
+                    jLabel50.setText("$" + price);
+                    break;
+            }
+            i++;
+        }
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error loading menu items: " + e.getMessage());
+    }
+}
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -150,6 +245,9 @@ public class Dashboard extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel2.setBackground(new java.awt.Color(235, 235, 235));
 
@@ -168,6 +266,8 @@ public class Dashboard extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1350, -1));
 
         jPanel3.setBackground(new java.awt.Color(235, 235, 235));
         jPanel3.setPreferredSize(new java.awt.Dimension(1302, 500));
@@ -449,6 +549,9 @@ public class Dashboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(jLabelimage3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jLabel23, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -461,16 +564,13 @@ public class Dashboard extends javax.swing.JFrame {
                             .addComponent(jLabel25)
                             .addComponent(jCheckBox4)
                             .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 102, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                        .addComponent(jLabelimage3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addGap(0, 102, Short.MAX_VALUE))))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabelimage3, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                .addComponent(jLabelimage3, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel21)
@@ -819,6 +919,11 @@ public class Dashboard extends javax.swing.JFrame {
         jButton2.setFont(new java.awt.Font("Times New Roman", 1, 20)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Receipt");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setBackground(new java.awt.Color(51, 51, 255));
         jButton3.setFont(new java.awt.Font("Times New Roman", 1, 20)); // NOI18N
@@ -997,35 +1102,9 @@ public class Dashboard extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(18, Short.MAX_VALUE)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 684, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(18, 82, -1, 684));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -1064,7 +1143,44 @@ public class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBox8ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        subtotal = 0.0;
+    jTextArea1.setText(""); // Clear receipt area
+    
+    // Item 1
+    if (jCheckBox1.isSelected()) {
+        int qty = (int) jSpinner1.getValue();
+        if (qty == 0) {
+            qtyIsZero(qty);
+            return;
+        }
+        double price = Double.parseDouble(jLabel8.getText().substring(1));
+        double itemTotal = price * qty;
+        subtotal += itemTotal;
+        jTextArea1.append(jLabel7.getText() + " x " + qty + " = $" + itemTotal + "\n");
+    }
+    
+    // Repeat for items 2-8 (similar logic)
+    // Item 2
+    if (jCheckBox2.isSelected()) {
+        int qty = (int) jSpinner2.getValue();
+        if (qty == 0) {
+            qtyIsZero(qty);
+            return;
+        }
+        double price = Double.parseDouble(jLabel14.getText().substring(1));
+        double itemTotal = price * qty;
+        subtotal += itemTotal;
+        jTextArea1.append(jLabel13.getText() + " x " + qty + " = $" + itemTotal + "\n");
+    }
+    
+    // Continue for items 3-8...
+    
+    tax = subtotal * TAX_RATE;
+    total = subtotal + tax;
+    
+    jTextSubTax.setText(String.format("%.2f", subtotal));
+    jTextTax.setText(String.format("%.2f", tax));
+    jTextTotal.setText(String.format("%.2f", total));
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
@@ -1087,6 +1203,62 @@ public class Dashboard extends javax.swing.JFrame {
     private void jTextSubTaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextSubTaxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextSubTaxActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if (total == 0.0) {
+    JOptionPane.showMessageDialog(null, "Please calculate total first!");
+    return;
+}
+
+String sql = "INSERT INTO orders(order_date, subtotal, tax, total, items) VALUES(?,?,?,?,?)";
+
+try (Connection conn = DatabaseHelper.connect();
+     PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+    String orderDate = java.time.LocalDateTime.now().toString();
+    String items = jTextArea1.getText();
+
+    pstmt.setString(1, orderDate);
+    pstmt.setDouble(2, subtotal);
+    pstmt.setDouble(3, tax);
+    pstmt.setDouble(4, total);
+    pstmt.setString(5, items);
+
+    pstmt.executeUpdate();
+
+    // Format receipt
+    StringBuilder receipt = new StringBuilder();
+    receipt.append("====== ORDER RECEIPT ======\n");
+    receipt.append("Date: ").append(orderDate).append("\n\n");
+    receipt.append("Items:\n").append(items).append("\n");
+    receipt.append("----------------------------\n");
+    receipt.append(String.format("Subtotal: %.2f\n", subtotal));
+    receipt.append(String.format("Tax: %.2f\n", tax));
+    receipt.append(String.format("Total: %.2f\n", total));
+    receipt.append("============================");
+
+    // Show receipt in new dialog
+    JTextArea receiptArea = new JTextArea(receipt.toString());
+    receiptArea.setEditable(false);
+    receiptArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+    JScrollPane scrollPane = new JScrollPane(receiptArea);
+    scrollPane.setPreferredSize(new Dimension(350, 300));
+
+    JOptionPane.showMessageDialog(null, scrollPane, "Receipt", JOptionPane.INFORMATION_MESSAGE);
+
+    JOptionPane.showMessageDialog(null, "Order saved successfully!");
+
+    // Optionally clear the form
+    jTextArea1.setText("");
+    subtotal = 0.0;
+    tax = 0.0;
+    total = 0.0;
+
+} catch (SQLException e) {
+    JOptionPane.showMessageDialog(null, "Error saving order: " + e.getMessage());
+}
+
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments

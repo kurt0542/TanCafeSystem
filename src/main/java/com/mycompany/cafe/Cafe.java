@@ -5,6 +5,7 @@
 package com.mycompany.cafe;
 
 import cafe.Dashboard;
+import com.formdev.flatlaf.FlatLightLaf;
 
 /**
  *
@@ -16,6 +17,7 @@ public class Cafe {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        FlatLightLaf.setup();
         new Dashboard().setVisible(true);
     }
     
